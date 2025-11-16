@@ -1,0 +1,1 @@
+export { NicknameSetupPage } from './NicknameSetupPage';

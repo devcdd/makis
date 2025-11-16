@@ -1,135 +1,146 @@
-# Maple Idle Coupon Auto Bot API
+# Maple Idle Coupon Auto Bot - Monorepo
 
-메이플스토리 아이들 쿠폰 자동화 봇의 백엔드 API입니다. NestJS와 Supabase를 사용하여 유저 정보를 관리합니다.
+메이플 아이들 쿠폰 자동 배포 시스템의 모노레포입니다.
 
-## 환경변수 설정
+## 프로젝트 구조
 
-프로젝트 루트에 `.env` 파일을 생성하고 다음 환경변수를 설정해주세요:
+```
+monorepo/
+├── packages/
+│   ├── server/          # NestJS 백엔드 API
+│   └── client/          # React 프론트엔드
+├── package.json         # 모노레포 루트 설정
+└── pnpm-workspace.yaml  # 워크스페이스 설정
+```
+
+## 설치 및 실행
+
+### 1. 의존성 설치
+
+```bash
+pnpm install
+```
+
+### 2. 환경변수 설정
+
+프로젝트 루트에 `.env` 파일을 생성하고 Supabase 설정을 추가하세요:
 
 ```env
-# Supabase Configuration
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_ANON_KEY=your-supabase-anon-key-here
-
-# Server Configuration
 PORT=3000
+
+# 카카오 OAuth 설정 (서버용)
+KAKAO_CLIENT_ID=your-kakao-client-id
+KAKAO_CLIENT_SECRET=your-kakao-client-secret
+KAKAO_REDIRECT_URI=http://localhost:3000/auth/callback/kakao
+
+# 카카오 OAuth 설정 (클라이언트용)
+VITE_KAKAO_APP_KEY=your-kakao-app-key
 ```
 
-### Supabase 설정 방법:
+**참고**: 서버는 루트의 `.env` 파일과 `packages/server/.env` 파일을 모두 참조합니다. 루트 파일이 우선 적용됩니다.
 
-1. [Supabase](https://supabase.com)에서 프로젝트 생성
-2. Settings > API에서 URL과 anon key 확인
-3. Database에서 다음 SQL로 테이블 생성:
+### 3. 개발 서버 실행
 
-```sql
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  user_id TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
-
-## API 엔드포인트
-
-- `POST /users` - 유저 ID 저장
-  - Request: `{ "userId": "string" }`
-  - Response: 저장된 데이터
-
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+#### 백엔드와 프론트엔드를 동시에 실행:
 
 ```bash
-$ pnpm install
+pnpm dev
 ```
 
-## Compile and run the project
+#### 개별 실행:
 
 ```bash
-# development
-$ pnpm run start
+# 백엔드만 실행 (포트 3000)
+pnpm dev:server
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+# 프론트엔드만 실행 (포트 3001)
+pnpm dev:client
 ```
 
-## Run tests
+## API 문서
+
+백엔드 실행 후 [http://localhost:3000/api](http://localhost:3000/api)에서 Swagger 문서를 확인할 수 있습니다.
+
+## 프로젝트 목적
+
+메이플 키우기(메이플스토리 키우기) 게임에서 쿠폰 적용 과정을 자동화하여 사용자 편의성을 향상시키는 서비스입니다.
+
+### 주요 문제 해결
+
+- **번거로운 쿠폰 적용 과정**: 인게임에서 UUID 복사 → 웹사이트 접속 → 쿠폰 코드 입력의 반복적인 작업
+- **일괄 처리 필요성**: 다수의 계정에 대한 쿠폰 적용을 효율적으로 처리
+
+### 해결 방안
+
+- **쿠폰 코드 중앙 관리**: 서버에서 쿠폰 코드를 관리하고 자동으로 배포
+- **UUID 일괄 등록**: 사용자가 UUID를 등록하면 자동으로 쿠폰 적용
+- **API 자동화**: 메이플 서버 API를 활용한 자동 쿠폰 적용 시스템
+
+### 미래 확장성
+
+넥슨의 메이플 키우기 오픈 API 제공 시점에 대비하여 다음과 같은 기능을 추가할 수 있습니다:
+
+- 커뮤니티 기능 (친구 목록, 길드 관리 등)
+- 게임 데이터 분석 및 통계
+- 자동화된 게임 관리 기능
+
+## 주요 기능
+
+### 백엔드 (packages/server)
+
+- **NestJS** 기반 REST API
+- **Supabase** 데이터베이스 연동
+- 유저 및 쿠폰 관리
+- 메이플 서버 API 연동
+- Swagger API 문서 자동 생성
+
+### 프론트엔드 (packages/client)
+
+- **React + TypeScript + Vite**
+- UUID 등록 및 관리 인터페이스
+- 쿠폰 배포 현황 모니터링
+- 모던 웹 애플리케이션
+- 대화형 UUID 확인 가이드
+
+## UUID 가이드 이미지 설정
+
+UUID 확인 방법을 안내하는 이미지를 추가하려면 다음 경로에 파일을 넣어주세요:
+
+```
+packages/client/public/images/
+├── uuid-guide-1.png  # 게임 접속 화면
+├── uuid-guide-2.png  # 설정 메뉴
+└── uuid-guide-3.png  # UUID 복사 화면
+```
+
+이미지를 추가하지 않으면 자동으로 플레이스홀더가 표시됩니다.
+
+## 개발 명령어
 
 ```bash
-# unit tests
-$ pnpm run test
+# 모든 패키지 빌드
+pnpm build
 
-# e2e tests
-$ pnpm run test:e2e
+# 모든 패키지 린트
+pnpm lint
 
-# test coverage
-$ pnpm run test:cov
+# 모든 패키지 테스트
+pnpm test
+
+# 모든 패키지 클린
+pnpm clean
 ```
 
-## Deployment
+## 기여하기
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1. 이 저장소를 포크합니다
+2. 기능 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`)
+3. 변경사항을 커밋합니다 (`git commit -m 'Add amazing feature'`)
+4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`)
+5. Pull Request를 생성합니다
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 라이선스
 
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+이 프로젝트는 UNLICENSED입니다.
