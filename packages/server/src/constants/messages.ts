@@ -6,6 +6,10 @@ export const MESSAGES = {
   // 유저 관련
   DUPLICATE_USER_ID: '이미 등록된 아이디입니다.',
 
+  // 캐릭터 관련
+  DUPLICATE_CHARACTER_ID: '이미 등록된 캐릭터입니다.',
+  CREATE_CHARACTER_SUCCESS: '캐릭터 등록 성공',
+
   // 쿠폰 관련
   COUPON_AUTO_PROCESS_RECEIVED: '쿠폰 자동 처리 요청이 접수되었습니다.',
 

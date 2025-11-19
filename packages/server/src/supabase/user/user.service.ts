@@ -82,6 +82,37 @@ export class UserService {
     return data as User;
   }
 
+  async isUserAdmin(userId: string): Promise<boolean> {
+    console.log('=== isUserAdmin 호출 ===');
+    console.log('관리자 권한 확인할 userId:', userId);
+
+    try {
+      const { data, error } = await this.supabaseService
+        .getClient()
+        .from('users')
+        .select('isAdmin')
+        .eq('userId', userId)
+        .single();
+
+      if (error) {
+        console.error('관리자 권한 조회 실패:', {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        return false; // 에러 발생시 기본적으로 false 반환
+      }
+
+      const isAdmin = data?.isAdmin === true;
+      console.log(`사용자 ${userId} 관리자 권한:`, isAdmin);
+      return isAdmin;
+    } catch (error) {
+      console.error('관리자 권한 확인 중 예외 발생:', error);
+      return false; // 예외 발생시 기본적으로 false 반환
+    }
+  }
+
   async updateUserNickname(userId: string, nickname: string): Promise<User> {
     console.log('=== updateUserNickname 호출 ===');
     console.log('userId:', userId, 'nickname:', nickname);
@@ -112,7 +143,7 @@ export class UserService {
 
   async saveCharacter(
     characterData: CreateCharacterRequest,
-  ): Promise<Character[]> {
+  ): Promise<{ success: boolean; message: string; data?: Character[] }> {
     const { data, error } = await this.supabaseService
       .getClient()
       .from('characters')
@@ -133,13 +164,17 @@ export class UserService {
       });
 
       if (error.code === '23505') {
-        throw new Error(MESSAGES.DUPLICATE_USER_ID);
+        throw new Error(MESSAGES.DUPLICATE_CHARACTER_ID);
       }
 
       throw error;
     }
 
-    return data as Character[];
+    return {
+      success: true,
+      message: MESSAGES.CREATE_CHARACTER_SUCCESS,
+      data: data as Character[],
+    };
   }
 
   async getAllCharacters(): Promise<Character[]> {

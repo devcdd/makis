@@ -4,11 +4,13 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "watchAssets": true
+    "watchAssets": true,
+    "builder": "swc",
+    "typeCheck": true
   },
   "watchOptions": {
     "watchAssets": true,
     "usePolling": false,
-    "interval": 1000
+    "interval": 100
   }
 }

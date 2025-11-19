@@ -10,7 +10,7 @@ export class CouponService {
   async saveCoupon(name: string): Promise<Coupon[]> {
     const { data, error } = await this.supabaseService
       .getClient()
-      .from('coupons')
+      .from('coupon')
       .insert([{ name: name }])
       .select();
 
@@ -30,7 +30,7 @@ export class CouponService {
   async getAllCoupons(): Promise<Coupon[]> {
     const { data, error } = await this.supabaseService
       .getClient()
-      .from('coupons')
+      .from('coupon')
       .select('*');
 
     if (error) {

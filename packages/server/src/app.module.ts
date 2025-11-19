@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,12 +14,16 @@ import * as path from 'path';
       envFilePath: [
         path.join(process.cwd(), '..', '..', '.env'), // 프로젝트 루트 .env
         path.join(process.cwd(), '.env'), // packages/server/.env
-        '.env' // 현재 디렉토리 .env
+        '.env', // 현재 디렉토리 .env
       ],
     }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'default-secret-key',
-      signOptions: { expiresIn: '1h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'default-secret-key',
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
     }),
     SupabaseModule,
     AuthModule,

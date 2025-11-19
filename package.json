@@ -1,7 +1,7 @@
 {
   "name": "makis-monorepo",
   "version": "1.0.0",
-  "description": "마키스 시스템 모노레포",
+  "description": "메키스 시스템 모노레포",
   "private": true,
   "workspaces": [
     "packages/*"

@@ -45,7 +45,7 @@ export class SupabaseService {
 
   async saveCoupon(name: string): Promise<Coupon[]> {
     const { data, error } = await this.supabase
-      .from('coupons')
+      .from('coupon')
       .insert([{ name: name }])
       .select();
 

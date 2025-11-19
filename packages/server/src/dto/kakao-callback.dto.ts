@@ -30,6 +30,7 @@ export interface AuthUser {
   userId: string;
   provider: Provider;
   nickname?: string;
+  isAdmin?: boolean;
 }
 
 export class KakaoCallbackDto {
