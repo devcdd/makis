@@ -7,7 +7,7 @@ export declare class AuthController {
     private readonly authService;
     private readonly userService;
     constructor(authService: AuthService, userService: UserService);
-    kakaoCallback(callbackDto: KakaoCallbackDto, response: Response): Promise<AuthResponseDto>;
+    kakaoCallback(callbackDto: KakaoCallbackDto, request: Request, response: Response): Promise<AuthResponseDto>;
     updateNickname(userId: string, updateNicknameDto: UpdateNicknameDto): Promise<import("../types").User>;
     refreshTokens(request: Request, response: Response): Promise<Response<any, Record<string, any>>>;
 }

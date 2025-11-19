@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/supabase/user/index.ts"],"names":[],"mappings":";;;AAAA,+CAA6C;AAApC,2GAAA,WAAW,OAAA"}
+{"version":3,"sources":["../../../src/supabase/user/index.ts"],"sourcesContent":["export { UserService } from './user.service';\n"],"names":["UserService"],"mappings":";;;;+BAASA;;;eAAAA,wBAAW;;;6BAAQ"}

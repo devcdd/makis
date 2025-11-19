@@ -117,6 +117,118 @@ packages/client/public/images/
 
 이미지를 추가하지 않으면 자동으로 플레이스홀더가 표시됩니다.
 
+## Docker 배포
+
+### 분리된 클라이언트/서버 배포 (권장)
+
+클라이언트와 서버를 독립적으로 배포할 수 있습니다:
+
+#### 로컬 개발 환경
+```bash
+# 로컬 환경 전체 빌드 및 실행
+./build-local.sh
+
+# 로컬 환경 정지
+./stop-local.sh
+
+# 로컬 환경 재시작 (변경사항 적용)
+./restart-local.sh
+```
+
+#### 프로덕션 빌드 및 푸시
+```bash
+# 프로덕션 이미지 빌드 및 Docker Hub 푸시
+./build-prod.sh
+
+# 환경변수 설정 (선택사항)
+export DOCKER_REGISTRY="developercdd"  # 기본값: developercdd
+export DOCKER_TAG="v1.0.0"            # 기본값: latest
+```
+
+#### 개별 배포 예시
+```bash
+# 클라이언트만 빌드
+export BUILD_TYPE="client"
+./build-and-push.sh
+
+# 서버만 빌드
+export BUILD_TYPE="server"
+./build-and-push.sh
+
+# 둘 다 빌드
+export BUILD_TYPE="both"  # 기본값
+./build-and-push.sh
+```
+
+### 서버 배포
+
+#### 통합 배포 (권장)
+```bash
+# 서버에서 (클라이언트 + 서버 모두)
+cd /path/to/makis-project
+docker-compose --profile full up -d
+
+# 결과:
+# - localhost:4000 에서 프론트엔드 접근
+# - localhost:4010 에서 API 접근
+```
+
+#### 개별 배포
+```bash
+# 클라이언트만 배포
+docker-compose --profile client up -d
+
+# 서버만 배포
+docker-compose --profile server up -d
+
+# 기존 통합 방식 (단일 컨테이너)
+docker-compose --profile legacy up -d
+```
+
+### Docker Compose 설정
+
+서버의 `docker-compose.yml`에서 이미지 경로를 실제 레지스트리로 변경하세요:
+
+```yaml
+services:
+  makis-app:
+    image: your-registry/makis-app:latest  # 실제 레지스트리 주소로 변경
+```
+
+### Nginx 설정
+
+이미 nginx가 설치된 서버에서는 다음 설정을 사용하세요:
+
+```bash
+# nginx.conf를 /etc/nginx/sites-available/makis에 복사
+sudo cp nginx.conf /etc/nginx/sites-available/makis
+
+# 심볼릭 링크 생성
+sudo ln -s /etc/nginx/sites-available/makis /etc/nginx/sites-enabled/
+
+# nginx 재시작
+sudo systemctl restart nginx
+```
+
+### 환경변수 설정
+
+프로젝트 루트에 `.env` 파일을 생성하고 다음 환경변수를 설정하세요:
+
+```env
+# 서버 설정
+NODE_ENV=production
+SERVER_PORT=5000
+
+# Supabase 설정
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# 카카오 로그인 설정
+KAKAO_APP_KEY=your_kakao_app_key
+VITE_KAKAO_APP_KEY=your_kakao_app_key
+```
+
 ## 개발 명령어
 
 ```bash

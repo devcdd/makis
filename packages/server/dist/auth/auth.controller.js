@@ -26,8 +26,8 @@ let AuthController = class AuthController {
         this.authService = authService;
         this.userService = userService;
     }
-    async kakaoCallback(callbackDto, response) {
-        const authResponse = await this.authService.handleKakaoCallback(callbackDto);
+    async kakaoCallback(callbackDto, request, response) {
+        const authResponse = await this.authService.handleKakaoCallback(callbackDto, request);
         response.setHeader('x-refresh-token', authResponse.refreshToken);
         return authResponse;
     }
@@ -36,6 +36,9 @@ let AuthController = class AuthController {
     }
     async refreshTokens(request, response) {
         try {
+            console.log('🔄 Refresh API 호출됨');
+            console.log('🍪 요청 쿠키:', request.cookies);
+            console.log('🍪 Refresh Token 쿠키:', request.cookies?.refreshToken);
             const refreshToken = request.cookies?.refreshToken;
             if (!refreshToken) {
                 return response.status(401).json({
@@ -49,6 +52,8 @@ let AuthController = class AuthController {
             return response.json({
                 success: true,
                 message: '토큰이 갱신되었습니다.',
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
             });
         }
         catch (error) {
@@ -82,9 +87,10 @@ __decorate([
         description: '서버 오류',
     }),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [kakao_callback_dto_1.KakaoCallbackDto, Object]),
+    __metadata("design:paramtypes", [kakao_callback_dto_1.KakaoCallbackDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "kakaoCallback", null);
 __decorate([

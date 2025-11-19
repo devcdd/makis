@@ -8,12 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
-const axios_1 = require("axios");
+const axios_1 = __importDefault(require("axios"));
 const user_1 = require("../supabase/user");
 let AuthService = class AuthService {
     configService;
@@ -24,9 +27,9 @@ let AuthService = class AuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
-    async handleKakaoCallback(callbackDto) {
+    async handleKakaoCallback(callbackDto, request) {
         try {
-            const tokenResponse = await this.exchangeCodeForToken(callbackDto.code);
+            const tokenResponse = await this.exchangeCodeForToken(callbackDto.code, request);
             const userInfo = await this.getKakaoUserInfo(tokenResponse.access_token);
             const authResponse = await this.processUserLogin(userInfo);
             return authResponse;
@@ -36,10 +39,11 @@ let AuthService = class AuthService {
             throw new common_1.HttpException('카카오 로그인 처리 중 오류가 발생했습니다.', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    async exchangeCodeForToken(code) {
+    async exchangeCodeForToken(code, request) {
         const kakaoClientId = this.configService.get('KAKAO_CLIENT_ID');
         const kakaoClientSecret = this.configService.get('KAKAO_CLIENT_SECRET');
-        const redirectUri = this.configService.get('KAKAO_REDIRECT_URI');
+        const origin = request.headers.origin || `https://${request.headers.host}`;
+        const redirectUri = `${origin}/auth/callback/kakao`;
         if (!kakaoClientId || !kakaoClientSecret || !redirectUri) {
             throw new Error('카카오 OAuth 설정이 올바르지 않습니다.');
         }
@@ -112,6 +116,7 @@ let AuthService = class AuthService {
                 userId: dbUser.userId,
                 provider: dbUser.provider,
                 nickname: dbUser.nickname,
+                isAdmin: await this.userService.isUserAdmin(dbUser.userId),
             };
             const payload = {
                 sub: dbUser.userId,
@@ -147,7 +152,9 @@ let AuthService = class AuthService {
                 userId: user.userId,
                 provider: user.provider,
             };
-            const newAccessToken = this.jwtService.sign(newPayload);
+            const newAccessToken = this.jwtService.sign(newPayload, {
+                expiresIn: '1m',
+            });
             const newRefreshToken = this.jwtService.sign(newPayload, {
                 expiresIn: '30d',
             });

@@ -1,8 +1,17 @@
+// OAuth Provider enum
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Provider = void 0;
-var Provider;
-(function (Provider) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "Provider", {
+    enumerable: true,
+    get: function() {
+        return Provider;
+    }
+});
+var Provider = /*#__PURE__*/ function(Provider) {
     Provider["KAKAO"] = "KAKAO";
-})(Provider || (exports.Provider = Provider = {}));
+    return Provider;
+}({});
+
 //# sourceMappingURL=index.js.map

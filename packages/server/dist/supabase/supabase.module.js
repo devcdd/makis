@@ -1,23 +1,38 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "SupabaseModule", {
+    enumerable: true,
+    get: function() {
+        return SupabaseModule;
+    }
+});
+const _common = require("@nestjs/common");
+const _supabaseservice = require("./supabase.service");
+const _user = require("./user");
+const _coupon = require("./coupon");
+function _ts_decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    else for(var i = decorators.length - 1; i >= 0; i--)if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SupabaseModule = void 0;
-const common_1 = require("@nestjs/common");
-const supabase_service_1 = require("./supabase.service");
-const user_1 = require("./user");
-const coupon_1 = require("./coupon");
+}
 let SupabaseModule = class SupabaseModule {
 };
-exports.SupabaseModule = SupabaseModule;
-exports.SupabaseModule = SupabaseModule = __decorate([
-    (0, common_1.Module)({
-        providers: [supabase_service_1.SupabaseService, user_1.UserService, coupon_1.CouponService],
-        exports: [supabase_service_1.SupabaseService, user_1.UserService, coupon_1.CouponService],
+SupabaseModule = _ts_decorate([
+    (0, _common.Module)({
+        providers: [
+            _supabaseservice.SupabaseService,
+            _user.UserService,
+            _coupon.CouponService
+        ],
+        exports: [
+            _supabaseservice.SupabaseService,
+            _user.UserService,
+            _coupon.CouponService
+        ]
     })
 ], SupabaseModule);
+
 //# sourceMappingURL=supabase.module.js.map

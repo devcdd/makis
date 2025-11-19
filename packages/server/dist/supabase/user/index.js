@@ -1,6 +1,13 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserService = void 0;
-var user_service_1 = require("./user.service");
-Object.defineProperty(exports, "UserService", { enumerable: true, get: function () { return user_service_1.UserService; } });
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+Object.defineProperty(exports, "UserService", {
+    enumerable: true,
+    get: function() {
+        return _userservice.UserService;
+    }
+});
+const _userservice = require("./user.service");
+
 //# sourceMappingURL=index.js.map
