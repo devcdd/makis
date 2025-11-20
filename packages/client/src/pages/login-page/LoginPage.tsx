@@ -11,9 +11,16 @@ export function LoginPage() {
     }
 
     try {
-      kakao.Auth.authorize({
-        redirectUri: `${window.location.origin}/auth/callback/kakao`,
-      });
+      // kakao.Auth.authorize({
+      //   redirectUri: `${window.location.origin}/auth/callback/kakao`,
+      // });
+
+      window.location.href =
+        `https://kauth.kakao.com/oauth/authorize?client_id=${
+          import.meta.env.VITE_KAKAO_APP_KEY
+        }` +
+        `&redirect_uri=${window.location.origin + '/auth/callback/kakao'}` +
+        '&response_type=code';
     } catch (error) {
       console.error('카카오 로그인 중 오류 발생:', error);
     }
