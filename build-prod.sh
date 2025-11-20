@@ -6,10 +6,11 @@ set -e
 
 echo "🚀 프로덕션 빌드 및 배포 시작..."
 
-# 환경변수 파일 존재 확인
-if [ ! -f ".env" ]; then
-    echo "❌ .env 파일이 없습니다. env.example을 복사해서 설정해주세요."
-    echo "   cp env.example .env"
+# 프로덕션 환경변수 파일 확인
+if [ ! -f ".env.production" ]; then
+    echo "❌ .env.production 파일이 없습니다. 프로덕션 환경변수를 설정해주세요."
+    echo "   VITE_KAKAO_APP_KEY=your_kakao_app_key"
+    echo "   VITE_SERVER_URL=your_server_url"
     exit 1
 fi
 
@@ -33,15 +34,18 @@ echo "🔨 프로덕션 이미지 빌드 중..."
 # 클라이언트 빌드
 echo "📱 클라이언트 빌드..."
 
-# 프로덕션용 환경변수 파일 생성
-echo "VITE_KAKAO_APP_KEY=" > .env.production
-echo "VITE_SERVER_URL=" >> .env.production
+# 프로덕션용 환경변수 파일 준비
+echo "📋 .env.production 파일을 사용하여 빌드합니다."
+cp .env.production .env.production.tmp
+
+# 빌드용 환경변수 파일로 이름 변경
+mv .env.production.tmp .env.production
 
 # Vite 빌드 실행
 echo "   - Vite 빌드 실행..."
 pnpm --filter makis-client build
 
-# 임시 파일 정리
+# 임시 파일 정리 (빌드 후 .env.production 파일 삭제)
 rm .env.production
 
 # Docker 이미지 빌드
