@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from '@/shared/ui/Input';
 import { Button } from '@/shared/ui/Button';
 import { Tooltip } from '@/shared/ui/Tooltip';
@@ -8,6 +9,7 @@ import {
   useRegisterUserMutation,
   type RegisterUserResponse,
 } from '@/features/register-user';
+import { useIsAuthenticated } from '@/features/auth';
 import {
   VALIDATION_MESSAGES,
   SUBMIT_PAGE_TEXTS,
@@ -27,6 +29,9 @@ const UUID_GUIDE_IMAGES = {
 };
 
 export function SubmitPage() {
+  const navigate = useNavigate();
+  const isAuthenticated = useIsAuthenticated();
+
   const userIdInput = useInput({
     initialValue: '',
     validator: (value) => {
@@ -38,6 +43,13 @@ export function SubmitPage() {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
   const registerUserMutation = useRegisterUserMutation();
+
+  // 비로그인 사용자는 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = () => {
     if (!userIdInput.isValid) {

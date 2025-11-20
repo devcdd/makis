@@ -65,12 +65,6 @@ export class AppController {
         return false;
       }
 
-      // 숫자만 포함되어 있는지 검증
-      if (!/^\d+$/.test(characterId)) {
-        console.log('캐릭터 ID가 숫자로만 구성되지 않음');
-        return false;
-      }
-
       console.log('캐릭터 ID 형식 검증 성공');
       return true;
     } catch (error) {
@@ -173,6 +167,7 @@ export class AppController {
     const verifyResult = this.jwtService.verify(
       request.headers.authorization!.substring(7),
     ) as any;
+
     const ownerId = verifyResult.userId;
 
     // 캐릭터 존재 여부 검증 (토큰이 있으므로 무조건 수행)
@@ -211,6 +206,67 @@ export class AppController {
 
       // 다른 에러는 그대로 throw
       throw error;
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('characters')
+  @ApiOperation({
+    summary: '사용자의 캐릭터 목록 조회',
+    description: 'JWT 토큰에서 추출한 userId를 기반으로 해당 사용자가 소유한 캐릭터 목록을 반환합니다.',
+    tags: [API_TAGS.USERS]
+  })
+  @ApiResponse({
+    status: 200,
+    description: '캐릭터 목록 조회 성공',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: '캐릭터 목록을 성공적으로 조회했습니다.' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              characterId: { type: 'string', example: 'character123' },
+              ownerId: { type: 'string', example: 'user123' },
+              createdAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: '인증되지 않은 사용자' })
+  async getUserCharacters(@Req() request: Request) {
+    try {
+      // JWT 토큰에서 userId 추출
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const verifyResult = this.jwtService.verify(
+        request.headers.authorization!.substring(7),
+      ) as any;
+
+      const ownerId = verifyResult.userId;
+
+      // 해당 사용자의 캐릭터 목록 조회
+      const characters = await this.userService.getCharactersByUserId(ownerId);
+
+      return {
+        success: true,
+        message: '캐릭터 목록을 성공적으로 조회했습니다.',
+        data: characters,
+      };
+    } catch (error) {
+      console.error('캐릭터 목록 조회 중 오류 발생:', error);
+      throw new HttpException(
+        {
+          success: false,
+          message: '캐릭터 목록 조회 중 오류가 발생했습니다.',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

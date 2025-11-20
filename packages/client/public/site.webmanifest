@@ -1,0 +1,21 @@
+{
+  "name": "🌸 메키스 - 메이플 아이들 쿠폰 자동 배포 시스템",
+  "short_name": "메키스",
+  "description": "메이플 아이들 캐릭터를 등록하고 쿠폰을 자동으로 받아보세요",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "/src/assets/logo/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/src/assets/logo/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

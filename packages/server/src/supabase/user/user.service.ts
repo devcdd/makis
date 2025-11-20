@@ -195,4 +195,27 @@ export class UserService {
 
     return data as Character[];
   }
+
+  /**
+   * 특정 사용자의 캐릭터 목록 조회
+   */
+  async getCharactersByUserId(ownerId: string): Promise<Character[]> {
+    const { data, error } = await this.supabaseService
+      .getClient()
+      .from('characters')
+      .select('*')
+      .eq('ownerId', ownerId);
+
+    if (error) {
+      console.error(ERROR_LOG_PREFIX.SUPABASE_ERROR_DETAILS, {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+      });
+      throw error;
+    }
+
+    return data as Character[];
+  }
 }

@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/ui/Button';
 import { LANDING_PAGE_TEXTS } from '@/constants';
 import { useAuthStore } from '@/features/auth';
 
 export function LandingPage() {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   return (
     <div className="min-h-screen">
@@ -26,16 +28,18 @@ export function LandingPage() {
                 <Button
                   size="lg"
                   className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
+                  onClick={() => navigate('/submit')}
                 >
-                  <a href="/submit">UUID 등록하기</a>
+                  UUID 등록하기
                 </Button>
               ) : (
                 // 로그인되지 않은 상태 - UUID 등록하기 버튼
                 <Button
                   size="lg"
                   className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
+                  onClick={() => navigate('/login')}
                 >
-                  <a href="/submit">{LANDING_PAGE_TEXTS.hero.buttons.login}</a>
+                  {LANDING_PAGE_TEXTS.hero.buttons.login}
                 </Button>
               )}
             </div>
@@ -116,10 +120,9 @@ export function LandingPage() {
             <Button
               size="lg"
               className="bg-white text-[var(--color-primary)] hover:bg-[var(--color-primary-50)] px-[var(--spacing-3xl)] py-[var(--spacing-xl)] text-lg font-semibold"
+              onClick={() => navigate('/submit')}
             >
-              <a href="/submit">
-                {user ? 'UUID 등록하기' : LANDING_PAGE_TEXTS.cta.button}
-              </a>
+              {user ? 'UUID 등록하기' : LANDING_PAGE_TEXTS.cta.button}
             </Button>
           </div>
         </div>

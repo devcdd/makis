@@ -5,6 +5,7 @@ import { LoginPage } from '@/pages/login-page';
 import { AuthCallbackPage } from '@/pages/auth-callback';
 import { NicknameSetupPage } from '@/pages/nickname-setup';
 import { AdminPage } from '@/pages/admin-page';
+import { ProfilePage } from '@/pages/profile';
 import { Header } from '@/widgets/Header';
 import { Error404 } from './Error404';
 
@@ -60,6 +61,15 @@ const router = createBrowserRouter([
       <div className="min-h-screen bg-[var(--color-surface)]">
         <Header />
         <AdminPage />
+      </div>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <div className="min-h-screen bg-[var(--color-surface)]">
+        <Header />
+        <ProfilePage />
       </div>
     ),
   },
